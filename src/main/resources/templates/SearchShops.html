@@ -11,6 +11,8 @@ function separate(num){
 }
 
 	function inputValue() {
+		
+	var selectColor=$("#color").val();
 	var selectObj = {
 			 gender:null,
 		};
@@ -26,9 +28,14 @@ function separate(num){
 			$("#color").empty();
 			$("#shops").empty();
 			var dat=""
+			
 			jQuery.each(data,function(i,val)  {
-				dat +=
-					`<option value="${data[i]}">${data[i]}</option>`
+				if (data[i]==selectColor){
+					dat +=`<option value="${data[i]}"selected>${data[i]}</option>`
+				}else{
+					dat +=`<option value="${data[i]}">${data[i]}</option>`
+				}
+				
 			});
 			
 			$("#color").append(dat);

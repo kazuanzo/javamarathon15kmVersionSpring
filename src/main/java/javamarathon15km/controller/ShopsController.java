@@ -29,7 +29,7 @@ public class ShopsController {
 	 */
 	@RequestMapping(value = "/shops", method = RequestMethod.GET)
 	@ResponseBody//メソッドへのリクエスト結果がJSON形式になる
-	List<Shops> getItems(String data) {
+	List<Shops> getItems(String data) {		
 		//取得したJson値をPOJOにデコードする
 		Shops shops=JSON.decode(data,Shops.class);
 		
