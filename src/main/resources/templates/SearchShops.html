@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+<script>
+//数字を３桁に区切るメソッド
+function separate(num){
+    return String(num).replace( /(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+}
+
+	function inputValue() {
+	var selectObj = {
+			 gender:null,
+		};
+	
+	//選択時の値を送る
+	selectObj.gender = $("[name=gender]:checked").val();
+		
+	//JavaScriptのオブジェクトをJSONに変換する	
+	var selectJson =JSON.stringify(selectObj); 
+	  console.log(selectJson);    
+	// サーブレットに値を送信、値を受け取る
+		$.getJSON('gender', {data : selectJson},function(data){
+			$("#color").empty();
+			$("#shops").empty();
+			var dat=""
+			jQuery.each(data,function(i,val)  {
+				dat +=
+					`<option value="${data[i]}">${data[i]}</option>`
+			});
+			
+			$("#color").append(dat);
+			
+		});
+	 	}
+	
+	function empty() {
+		$("#shops").empty();
+		
+	}
+	
+//////////読み込み後実行//////////
+	window.onload = function(){
+		inputValue();
+		}
+
+/////////////////////////////////
+
+$(function() {
+	var requestObj = {
+			 color:null,
+			 gender:null,
+		};
+	 	//クリック時に実行
+		$("#request").click(function() {
+			
+		 	//リクエスト用のオブジェクトに値を詰め込む
+			requestObj.color = $("#color").val();
+			requestObj.gender = $("[name=gender]:checked").val();
+
+			//JavaScriptのオブジェクトをJSONに変換する	
+	  		var requestJson =JSON.stringify(requestObj); 
+			  console.log(requestJson);    
+		// サーブレットに値を送信、値を受け取る
+		$.getJSON('shops', {data : requestJson},function(data){
+			$("#shops").empty();
+			var dat=""
+			jQuery.each(data,function(i,val)  {
+				dat +=
+					`<table border="1">
+					<tr>
+					<td>ジャンル</td>
+					<td>${data[i].genre}</td>
+					</tr>
+					<tr>
+					<td>サイズ</td>
+					<td>${data[i].size}</td>
+					</tr>
+					<tr>
+					<td>価格</td>
+					<td>${separate(data[i].price)}</td>
+					</tr>
+					</table>`		
+			});
+			
+			$("#shops").append(dat);
+			
+		});
+	 	});	 
+	});
+</script>
+</head>
+<body>
+<h1>洋服shops</h1>
+好きな色を選択してください。
+<FORM  method=get>
+<input type="radio" name="gender" value="0" onchange="inputValue()">Man 
+<input type="radio" name="gender" value="1" onchange="inputValue()" checked>Woman
+<select id="color" onchange="empty()">
+</select>
+<INPUT type='button' id="request"  value='検索'>
+</FORM>
+	<div id="shops"></div>    
+
+</body>
+</html>
